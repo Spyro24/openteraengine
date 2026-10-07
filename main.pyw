@@ -1,23 +1,23 @@
 import pygame as p
 import helper
 
-window = p.display.set_mode((500, 300))
+window = p.display.set_mode((0,0))
 
-div = 40.99999
+div = 0.04999
 
-noise = []
-for n in range(500):
-    noise.append(helper.perlin.perlin1d(n/div))
+for y in range(window.height):
+    for x in range(window.width):
+        window.set_at((x,y), (0, 127 * helper.perlin.perlin2d(x*div,y*div) + 127, 0))
+    p.display.flip()
 
-for y in range(30):
-    for x in range(500):
-        noise[x] += helper.perlin.perlin1d(x/div, seed=y)
+for y in range(window.height):
+    for x in range(window.width):
+        px = window.get_at((x,y))
+        window.set_at((x,y), (0, px[1], 127 * helper.perlin.perlin2d(x*div,y*div, seed=50493) + 127))
+    p.display.flip()
 
-for y in range(100):
-    for x in range(500):
-        noise[x] += helper.perlin.perlin1d(x/div, seed=y*y)
-
-for x in range(500):
-    window.set_at((x, 150 + noise[x] * 10),(0,255,0))
-    
-p.display.flip()
+for y in range(window.height):
+    for x in range(window.width):
+        px = window.get_at((x,y))
+        window.set_at((x,y), (127 * helper.perlin.perlin2d(x*div,y*div, seed=76281) + 127, px[1], px[2]))
+    p.display.flip()
